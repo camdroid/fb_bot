@@ -5,15 +5,17 @@ from secrets import FB_ACCESS_TOKEN
 from pymessenger.bot import Bot
 
 app = Flask(__name__)
-bot = Bot(ACCESS_TOKEN)
+bot = Bot(FB_ACCESS_TOKEN)
 
 
 def verify_fb_token(token_sent):
-    if token_sent == VERIFY_TOKEN:
+    print('Checking verification token')
+    if token_sent == FB_VERIFY_TOKEN:
         return request.args.get('hub.challenge')
     return 'Invalid verification token'
 
 def send_message(recipient_id, response):
+    print('Sending message to {}')
     bot.send_text_message(recipient_id, response)
     return "success"
 
@@ -28,7 +30,7 @@ def receive_message():
     else:
         output = request.get_json()
         for event in output['entry']:
-            messaging = event['messaging']:
+            messaging = event['messaging']
             for message in messaging:
                 if message.get('message'):
                     recipient_id = message['sender']['id']
